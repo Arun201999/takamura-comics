@@ -41,33 +41,45 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold tracking-tight">TAKAMURA</span>
+          <span className="text-xl font-bold tracking-tight text-orange-500">TAKAMURA COMICS</span>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link
             to="/"
-            className="text-sm font-medium hover:text-primary transition-colors"
+            className="text-sm font-medium hover:text-orange-500 transition-colors"
           >
             Home
           </Link>
           <Link
             to="/explore"
-            className="text-sm font-medium hover:text-primary transition-colors"
+            className="text-sm font-medium hover:text-orange-500 transition-colors"
           >
             Explore
           </Link>
           <Link
             to="/top"
-            className="text-sm font-medium hover:text-primary transition-colors"
+            className="text-sm font-medium hover:text-orange-500 transition-colors"
           >
-            Top Comics
+            Top Rated
+          </Link>
+          <Link
+            to="/new"
+            className="text-sm font-medium hover:text-orange-500 transition-colors"
+          >
+            New Releases
+          </Link>
+          <Link
+            to="/genres"
+            className="text-sm font-medium hover:text-orange-500 transition-colors"
+          >
+            Genres
           </Link>
           {user?.role === 'artist' && (
             <Link
               to="/dashboard"
-              className="text-sm font-medium hover:text-primary transition-colors"
+              className="text-sm font-medium hover:text-orange-500 transition-colors"
             >
               Artist Dashboard
             </Link>
@@ -110,7 +122,7 @@ const Header = () => {
             </DropdownMenu>
           ) : (
             <Link to="/login">
-              <Button variant="ghost" className="flex items-center space-x-2">
+              <Button variant="ghost" className="flex items-center space-x-2 hover:text-orange-500">
                 <User className="h-4 w-4" />
                 <span>Sign In</span>
               </Button>
@@ -148,7 +160,19 @@ const Header = () => {
               to="/top"
               className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
             >
-              Top Comics
+              Top Rated
+            </Link>
+            <Link
+              to="/new"
+              className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
+            >
+              New Releases
+            </Link>
+            <Link
+              to="/genres"
+              className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors"
+            >
+              Genres
             </Link>
             {user?.role === 'artist' && (
               <Link
@@ -194,7 +218,7 @@ const Header = () => {
                 </>
               ) : (
                 <Link to="/login" className="block">
-                  <Button className="w-full">Sign In</Button>
+                  <Button className="w-full bg-orange-500 hover:bg-orange-600">Sign In</Button>
                 </Link>
               )}
             </div>

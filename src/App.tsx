@@ -11,6 +11,10 @@ import Explore from "./pages/Explore";
 import Trending from "./pages/Trending";
 import TopComics from "./pages/TopComics";
 import Join from "./pages/Join";
+import NewReleases from "./pages/NewReleases";
+import Genres from "./pages/Genres";
+import Monetization from "./pages/Monetization";
+import Guidelines from "./pages/Guidelines";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +31,10 @@ const App = () => (
             <Route path="/trending" element={<Trending />} />
             <Route path="/top" element={<TopComics />} />
             <Route path="/join" element={<Join />} />
+            <Route path="/new" element={<NewReleases />} />
+            <Route path="/genres" element={<Genres />} />
+            <Route path="/monetization" element={<Monetization />} />
+            <Route path="/guidelines" element={<Guidelines />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
