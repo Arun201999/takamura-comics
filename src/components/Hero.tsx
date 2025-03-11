@@ -45,7 +45,7 @@ const Hero = () => {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </Link>
-            {user?.role === 'artist' ? (
+            {user && user.role === 'artist' ? (
               <Link to="/dashboard/upload">
                 <Button size="lg" variant="outline" className="gap-2 px-8 py-6 text-base font-medium bg-white/10 backdrop-blur-lg border-white/20 text-white hover:bg-white/20">
                   Upload Comic
