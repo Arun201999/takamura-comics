@@ -1,21 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import ComicCard, { Comic } from './ComicCard';
-
-export interface Comic {
-  id: string;
-  title: string;
-  coverImage: string;
-  author: string;
-  authorId: string;
-  views: number;
-  rating: number;
-  chapters: number;
-  genres: string[];
-  isNew?: boolean;
-  lastUpdated: string;
-}
+import ComicCard from './ComicCard';
+import type { Comic } from './ComicCard';
 
 interface FeaturedComicsProps {
   title?: string;
