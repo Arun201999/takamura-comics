@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,10 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Facebook, Twitter, Mail, AlertCircle } from 'lucide-react';
+import { Facebook, Twitter, Mail, AlertCircle, Chrome } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth, UserRole } from '@/context/AuthContext';
-import { FcGoogle } from 'react-icons/fc';
 
 interface AuthModalProps {
   defaultTab?: 'login' | 'register';
@@ -141,7 +139,7 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
               onClick={() => handleSocialLogin('google')}
               disabled={isLoading}
             >
-              <FcGoogle className="h-5 w-5" />
+              <Chrome className="h-5 w-5" />
               <span>Continue with Google</span>
             </Button>
             
@@ -313,7 +311,7 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
               onClick={() => handleSocialLogin('google')}
               disabled={isLoading}
             >
-              <FcGoogle className="h-5 w-5" />
+              <Chrome className="h-5 w-5" />
               <span>Sign up with Google</span>
             </Button>
             
