@@ -17,7 +17,7 @@ const Hero = () => {
   return <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-background z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-background z-10 rounded-none"></div>
         <img src="/lovable-uploads/d66d05c5-316d-4ed9-b9bc-667b1749612d.png" alt="Hero background" className="w-full h-full object-cover" />
       </div>
 
@@ -32,7 +32,7 @@ const Hero = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/explore">
-              <Button size="lg" className="gap-2 px-8 py-6 text-base font-medium">
+              <Button size="lg" className="gap-2 px-8 py-6 text-base font-medium bg-red-700 hover:bg-red-600">
                 Explore Comics
                 <ChevronRight className="h-4 w-4" />
               </Button>
