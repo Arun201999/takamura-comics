@@ -23,7 +23,7 @@ const Hero = () => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-background z-10"></div>
         <img
-          src="https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+          src="/lovable-uploads/d66d05c5-316d-4ed9-b9bc-667b1749612d.png"
           alt="Hero background"
           className="w-full h-full object-cover"
         />

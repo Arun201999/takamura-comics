@@ -15,6 +15,11 @@ import NewReleases from "./pages/NewReleases";
 import Genres from "./pages/Genres";
 import Monetization from "./pages/Monetization";
 import Guidelines from "./pages/Guidelines";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Cookies from "./pages/Cookies";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +40,11 @@ const App = () => (
             <Route path="/genres" element={<Genres />} />
             <Route path="/monetization" element={<Monetization />} />
             <Route path="/guidelines" element={<Guidelines />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/cookies" element={<Cookies />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
