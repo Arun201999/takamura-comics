@@ -1,16 +1,12 @@
-
 import { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { CalendarDays } from 'lucide-react';
-
 const NewReleases = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  return (
-    <div className="flex flex-col min-h-screen">
+  return <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow py-24 px-6">
         <div className="max-w-7xl mx-auto">
@@ -24,11 +20,11 @@ const NewReleases = () => {
           <div className="flex items-center justify-center mb-16">
             <div className="bg-orange-100 dark:bg-orange-900/20 rounded-lg p-8 max-w-md text-center">
               <CalendarDays className="h-12 w-12 mx-auto mb-4 text-orange-500" />
-              <h2 className="text-2xl font-semibold mb-2">Coming Soon!</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl font-semibold mb-2 text-orange-500">Coming Soon!</h2>
+              <p className="text-gray-900">
                 No new releases yet. Artists are currently setting up their accounts and preparing their comics.
               </p>
-              <p className="mt-4 text-muted-foreground">
+              <p className="mt-4 text-gray-950">
                 Check back soon or sign up for notifications to be alerted when new comics are published.
               </p>
             </div>
@@ -44,7 +40,7 @@ const NewReleases = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="font-medium">Artist Registration</h3>
-                    <p className="text-muted-foreground">Artists are currently registering and setting up their profiles.</p>
+                    <p className="text-gray-50">Artists are currently registering and setting up their profiles.</p>
                   </div>
                 </div>
                 
@@ -54,7 +50,7 @@ const NewReleases = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="font-medium">Content Creation</h3>
-                    <p className="text-muted-foreground">Comics are being created and prepared for publication.</p>
+                    <p className="text-gray-50">Comics are being created and prepared for publication.</p>
                   </div>
                 </div>
                 
@@ -64,7 +60,7 @@ const NewReleases = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="font-medium">Initial Release</h3>
-                    <p className="text-muted-foreground">The first wave of comics will be released soon!</p>
+                    <p className="text-gray-50">The first wave of comics will be released soon!</p>
                   </div>
                 </div>
               </div>
@@ -73,8 +69,6 @@ const NewReleases = () => {
         </div>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default NewReleases;
