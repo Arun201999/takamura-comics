@@ -114,4 +114,28 @@
   .hover-lift {
     @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
   }
+
+  /* Added additional text color utility classes */
+  .text-orange {
+    @apply text-orange-500;
+  }
+  
+  .text-accent-red {
+    @apply text-red-600;
+  }
+  
+  /* Form field styling to ensure visibility */
+  input, textarea, select {
+    @apply bg-muted text-foreground border-border;
+  }
+  
+  /* Ensuring label text is visible */
+  label {
+    @apply text-foreground;
+  }
+  
+  /* Ensuring links are visible */
+  a:not(.btn) {
+    @apply text-primary hover:text-primary/80;
+  }
 }
