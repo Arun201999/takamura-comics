@@ -1,15 +1,11 @@
-
 import { useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
 const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  return (
-    <div className="flex flex-col min-h-screen">
+  return <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow py-24 px-6">
         <div className="max-w-7xl mx-auto">
@@ -21,15 +17,11 @@ const About = () => {
             <p className="text-lg mt-4">
               Our mission is to create an inclusive space where artists can showcase their creativity, build an audience, and earn from their work, while readers can discover unique, diverse stories from creators they love.
             </p>
-            <p className="text-lg mt-4">
-              Founded in 2023, Takamura Comics has grown into a vibrant community of artists and comic enthusiasts who share a love for visual storytelling in all its forms.
-            </p>
+            <p className="text-lg mt-4">Founded in 2025, Takamura Comics has grown into a vibrant community of artists and comic enthusiasts who share a love for visual storytelling in all its forms.</p>
           </div>
         </div>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
