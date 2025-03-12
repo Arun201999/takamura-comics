@@ -1,7 +1,13 @@
+
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
+
 const Genres = () => {
+  const navigate = useNavigate();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -48,7 +54,13 @@ const Genres = () => {
     description: 'Stories involving solving a crime or uncovering secrets',
     color: 'bg-indigo-500'
   }];
-  return <div className="flex flex-col min-h-screen">
+
+  const handleGenreClick = (genreName: string) => {
+    // Navigate to the genre-specific page
+    navigate(`/explore?genre=${genreName.toLowerCase()}`);
+  };
+
+  return <div className="flex flex-col min-h-screen bg-black text-white">
       <Header />
       <main className="flex-grow py-24 px-6">
         <div className="max-w-7xl mx-auto">
@@ -58,20 +70,24 @@ const Genres = () => {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {genres.map(genre => <div key={genre.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+            {genres.map(genre => <div key={genre.id} className="bg-zinc-900 rounded-lg shadow-sm overflow-hidden border border-zinc-800 hover:shadow-md transition-shadow">
                 <div className={`h-3 ${genre.color}`}></div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2 text-zinc-950">{genre.name}</h3>
-                  <p className="text-muted-foreground mb-4">{genre.description}</p>
-                  <button className="text-orange-500 font-medium hover:text-orange-600 transition-colors">
+                  <h3 className="text-xl font-semibold mb-2 text-white">{genre.name}</h3>
+                  <p className="text-gray-400 mb-4">{genre.description}</p>
+                  <Button 
+                    variant="link" 
+                    className="text-orange-500 font-medium hover:text-orange-600 transition-colors p-0"
+                    onClick={() => handleGenreClick(genre.name)}
+                  >
                     Browse {genre.name} Comics
-                  </button>
+                  </Button>
                 </div>
               </div>)}
           </div>
           
           <div className="mt-12 text-center">
-            <p className="text-muted-foreground">
+            <p className="text-gray-400">
               Note: No comics have been uploaded yet. Genres will be populated with content once artists begin uploading.
             </p>
           </div>
