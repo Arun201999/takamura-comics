@@ -26,7 +26,7 @@ const Header = () => {
   return <header className={`fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 transition-all duration-300 ${isScrolled ? 'bg-black/80 dark:bg-black/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold tracking-tight text-red-700">TAKAMURA COMICS</span>
+          <span className="text-xl font-bold tracking-tight text-[#fa1919]">TAKAMURA COMICS</span>
         </Link>
 
         {/* Desktop Navigation */}
