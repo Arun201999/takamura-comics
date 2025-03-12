@@ -36,7 +36,7 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 transition-all duration-300 ${
-        isScrolled ? 'bg-white/80 dark:bg-black/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'
+        isScrolled ? 'bg-black/80 dark:bg-black/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -122,7 +122,7 @@ const Header = () => {
             </DropdownMenu>
           ) : (
             <Link to="/login">
-              <Button variant="ghost" className="flex items-center space-x-2 hover:text-orange-500">
+              <Button variant="black" className="flex items-center space-x-2 hover:text-orange-500">
                 <User className="h-4 w-4" />
                 <span>Sign In</span>
               </Button>
@@ -142,7 +142,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-background z-40 animate-in slide-down">
+        <div className="md:hidden fixed inset-0 top-16 bg-black z-40 animate-in slide-down">
           <nav className="flex flex-col p-6 space-y-4">
             <Link
               to="/"
