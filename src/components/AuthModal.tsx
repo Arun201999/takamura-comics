@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -39,12 +40,13 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
         description: "You've successfully logged in.",
       });
       navigate(redirectPath);
-    } catch (err) {
-      setError('Invalid email or password');
+    } catch (err: any) {
+      console.error('Login error:', err);
+      setError(err.message || 'Invalid email or password');
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: "Please check your credentials and try again.",
+        description: err.message || "Please check your credentials and try again.",
       });
     } finally {
       setIsLoading(false);
@@ -59,6 +61,11 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
       return;
     }
     
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    
     setIsLoading(true);
     setError('');
 
@@ -66,17 +73,15 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
       await registerWithEmail(email, password, name, role);
       toast({
         title: "Account created!",
-        description: role === 'artist' 
-          ? "Welcome to Takamura Comics! Your artist account has been created."
-          : "Welcome to Takamura Comics! Your reader account has been created.",
+        description: "Please check your email to verify your account.",
       });
-      navigate(redirectPath);
-    } catch (err) {
-      setError('Failed to create account');
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.message || 'Failed to create account');
       toast({
         variant: "destructive",
         title: "Registration failed",
-        description: "There was an error creating your account. Please try again.",
+        description: err.message || "There was an error creating your account. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -99,17 +104,13 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
           await loginWithTwitter();
           break;
       }
-      toast({
-        title: "Welcome!",
-        description: "You've successfully signed in.",
-      });
-      navigate(redirectPath);
-    } catch (err) {
+    } catch (err: any) {
+      console.error(`${provider} login error:`, err);
       setError(`Failed to login with ${provider}`);
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: `There was an error signing in with ${provider}. Please try again.`,
+        description: err.message || `There was an error signing in with ${provider}. Please try again.`,
       });
     } finally {
       setIsLoading(false);
@@ -256,10 +257,11 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
               <Input 
                 id="register-password" 
                 type="password" 
-                placeholder="Create a password"
+                placeholder="Create a password (min. 6 characters)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
               />
             </div>
 
