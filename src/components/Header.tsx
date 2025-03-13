@@ -5,31 +5,58 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
 const Header = () => {
-  const {
-    user,
-    logout
-  } = useAuth();
+  const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const location = useLocation();
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
-  return <header className={`fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 transition-all duration-300 ${isScrolled ? 'bg-black/80 dark:bg-black/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      setIsScrolled(currentScrollY > 10);
+      
+      if (currentScrollY > lastScrollY && isMobileMenuOpen && currentScrollY > 50) {
+        setIsMobileMenuOpen(false);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY, isMobileMenuOpen]);
+
+  useEffect(() => {
+    let timeoutId: number;
+    
+    if (isMobileMenuOpen) {
+      timeoutId = window.setTimeout(() => {
+        setIsMobileMenuOpen(false);
+      }, 5000);
+    }
+    
+    return () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [isMobileMenuOpen]);
+
+  return (
+    <header className={`fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-10 transition-all duration-300 ${isScrolled ? 'bg-black/80 dark:bg-black/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
           <span className="text-xl font-bold tracking-tight text-[#fa1919]">TAKAMURA COMICS</span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link to="/" className="text-sm font-medium hover:text-orange-500 transition-colors">
             Home
@@ -51,7 +78,6 @@ const Header = () => {
             </Link>}
         </nav>
 
-        {/* User Menu */}
         <div className="hidden md:flex items-center space-x-4">
           {user ? <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -89,13 +115,11 @@ const Header = () => {
             </Link>}
         </div>
 
-        {/* Mobile Menu Button */}
         <button className="md:hidden flex items-center justify-center" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle menu">
           {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && <div className="md:hidden fixed inset-0 top-16 bg-black z-40 animate-in slide-down">
           <nav className="flex flex-col p-6 space-y-4">
             <Link to="/" className="text-lg font-medium p-2 hover:bg-secondary rounded-md transition-colors">
@@ -145,6 +169,8 @@ const Header = () => {
             </div>
           </nav>
         </div>}
-    </header>;
+    </header>
+  );
 };
+
 export default Header;
