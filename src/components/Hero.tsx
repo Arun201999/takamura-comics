@@ -1,20 +1,23 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+
 const Hero = () => {
-  const {
-    user
-  } = useAuth();
+  const { user } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 100);
     return () => clearTimeout(timer);
   }, []);
-  return <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+
+  return (
+    <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-background z-10 rounded-none"></div>
@@ -37,20 +40,26 @@ const Hero = () => {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </Link>
-            {user && user.role === 'artist' ? <Link to="/dashboard/upload">
+            {user && user.role === 'artist' ? (
+              <Link to="/dashboard/upload">
                 <Button size="lg" variant="outline" className="gap-2 px-8 py-6 text-base font-medium bg-white/10 backdrop-blur-lg border-white/20 text-white hover:bg-white/20">
                   Upload Comic
                   <Upload className="h-4 w-4" />
                 </Button>
-              </Link> : <Link to="/join">
+              </Link>
+            ) : (
+              <Link to="/join">
                 <Button size="lg" variant="outline" className="gap-2 px-8 py-6 text-base font-medium bg-white/10 backdrop-blur-lg border-white/20 text-white hover:bg-white/20">
                   Join as Artist
                   <ChevronRight className="h-4 w-4" />
                 </Button>
-              </Link>}
+              </Link>
+            )}
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Hero;

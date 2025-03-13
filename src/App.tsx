@@ -22,6 +22,7 @@ import Terms from "./pages/Terms";
 import Cookies from "./pages/Cookies";
 import Login from "./pages/Login";
 import ArtistDashboard from "./pages/ArtistDashboard";
+import Upload from "./pages/Upload";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/cookies" element={<Cookies />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<ArtistDashboard />} />
+            <Route path="/dashboard/upload" element={<Upload />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
