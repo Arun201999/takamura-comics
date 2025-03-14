@@ -169,13 +169,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginWithEmail = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password
       });
       
       if (error) throw error;
-    } catch (error) {
+      console.log("Login successful:", data);
+    } catch (error: any) {
       console.error('Error logging in with email:', error);
       throw error;
     } finally {
@@ -191,7 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   ): Promise<void> => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { error, data } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -205,11 +206,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) throw error;
       
+      console.log("Registration successful:", data);
+      
       toast({
         title: "Account created!",
         description: "Please check your email for verification.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error registering with email:', error);
       throw error;
     } finally {
@@ -225,7 +228,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setUser(null);
       navigate('/');
-    } catch (error) {
+      
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+    } catch (error: any) {
       console.error('Error logging out:', error);
       toast({
         variant: "destructive",

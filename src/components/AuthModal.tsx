@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -75,13 +74,20 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
         title: "Account created!",
         description: "Please check your email to verify your account.",
       });
+      setActiveTab('login');
     } catch (err: any) {
       console.error('Registration error:', err);
-      setError(err.message || 'Failed to create account');
+      let errorMessage = err.message || 'Failed to create account';
+      
+      if (errorMessage.includes('User already registered')) {
+        errorMessage = 'This email is already registered. Please log in instead.';
+      }
+      
+      setError(errorMessage);
       toast({
         variant: "destructive",
         title: "Registration failed",
-        description: err.message || "There was an error creating your account. Please try again.",
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -112,7 +118,6 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
         title: "Login failed",
         description: err.message || `There was an error signing in with ${provider}. Please try again.`,
       });
-    } finally {
       setIsLoading(false);
     }
   };
