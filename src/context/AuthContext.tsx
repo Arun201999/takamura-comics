@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -85,6 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .single();
 
       if (error) {
+        console.error('Error fetching profile:', error);
         throw error;
       }
 
@@ -99,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           photoURL: profile.avatar_url || 'https://via.placeholder.com/150',
           role: profile.role as UserRole
         });
+        console.log('User profile loaded:', profile);
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -108,6 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // This function is kept for future use, but we'll focus on email auth for now
   const handleOAuthError = (error: any, provider: string) => {
     console.error(`Error with ${provider} OAuth:`, error);
     
@@ -185,14 +189,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginWithEmail = async (email: string, password: string): Promise<void> => {
     setIsLoading(true);
+    console.log('Attempting login with email:', email);
+    
     try {
       const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Login error:', error);
+        throw error;
+      }
+      
       console.log("Login successful:", data);
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
     } catch (error: any) {
       console.error('Error logging in with email:', error);
       throw error;
@@ -208,6 +222,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     role: UserRole
   ): Promise<void> => {
     setIsLoading(true);
+    console.log('Attempting registration with email:', email, 'role:', role);
+    
     try {
       const { error, data } = await supabase.auth.signUp({
         email,
@@ -221,7 +237,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Registration error:', error);
+        throw error;
+      }
       
       console.log("Registration successful:", data);
       
@@ -241,7 +260,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      if (error) {
+        console.error('Logout error:', error);
+        throw error;
+      }
       
       setUser(null);
       navigate('/');

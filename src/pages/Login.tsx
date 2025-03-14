@@ -28,6 +28,7 @@ const Login = () => {
         title: "Authentication Error",
         description: errorMessage,
       });
+      // Clear the error from URL
       window.history.replaceState(null, '', window.location.pathname);
     }
   }, [toast]);
@@ -41,8 +42,8 @@ const Login = () => {
     <div className="flex flex-col min-h-screen">
       <Header />
       
-      <main className="flex-grow flex items-center justify-center px-6 py-24">
-        <div className="w-full max-w-md">
+      <main className="flex-grow flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md rounded-lg border border-gray-200 shadow-md bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
           <AuthModal redirectPath={redirectPath} />
         </div>
       </main>

@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Facebook, Twitter, Mail, AlertCircle, Chrome } from 'lucide-react';
+import { Mail, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth, UserRole } from '@/context/AuthContext';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -24,9 +24,8 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
   const [role, setRole] = useState<UserRole>('reader');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showProviderError, setShowProviderError] = useState(false);
   
-  const { loginWithGoogle, loginWithFacebook, loginWithTwitter, loginWithEmail, registerWithEmail } = useAuth();
+  const { loginWithEmail, registerWithEmail } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -34,7 +33,6 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    setShowProviderError(false);
 
     try {
       await loginWithEmail(email, password);
@@ -45,11 +43,21 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
       navigate(redirectPath);
     } catch (err: any) {
       console.error('Login error:', err);
-      setError(err.message || 'Invalid email or password');
+      let errorMessage = 'Invalid email or password';
+      
+      if (err.message?.includes('Invalid login credentials')) {
+        errorMessage = 'Invalid email or password. Please check your credentials.';
+      } else if (err.message?.includes('Email not confirmed')) {
+        errorMessage = 'Please verify your email before logging in.';
+      } else {
+        errorMessage = err.message || 'An error occurred during login. Please try again.';
+      }
+      
+      setError(errorMessage);
       toast({
         variant: "destructive",
         title: "Login failed",
-        description: err.message || "Please check your credentials and try again.",
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);
@@ -71,7 +79,6 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
     
     setIsLoading(true);
     setError('');
-    setShowProviderError(false);
 
     try {
       await registerWithEmail(email, password, name, role);
@@ -99,45 +106,6 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
     }
   };
 
-  const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter') => {
-    setIsLoading(true);
-    setError('');
-    setShowProviderError(false);
-
-    try {
-      switch (provider) {
-        case 'google':
-          await loginWithGoogle();
-          break;
-        case 'facebook':
-          await loginWithFacebook();
-          break;
-        case 'twitter':
-          await loginWithTwitter();
-          break;
-      }
-    } catch (err: any) {
-      console.error(`${provider} login error:`, err);
-      
-      // Check for the specific provider not enabled error
-      if (err.message?.includes('provider is not enabled') || 
-          err.error_code === 'validation_failed' ||
-          err.msg?.includes('provider is not enabled')) {
-        setShowProviderError(true);
-        setError(`${provider} login is not properly configured. Please contact support.`);
-      } else {
-        setError(`Failed to login with ${provider}`);
-      }
-      
-      toast({
-        variant: "destructive",
-        title: "Login failed",
-        description: err.message || `There was an error signing in with ${provider}. Please try again.`,
-      });
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="w-full max-w-md mx-auto p-6 space-y-6">
       <div className="text-center mb-8">
@@ -147,13 +115,12 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
         </p>
       </div>
 
-      {showProviderError && (
+      {error && (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Authentication Provider Error</AlertTitle>
+          <AlertTitle>Authentication Error</AlertTitle>
           <AlertDescription>
-            The selected authentication provider is not enabled in your Supabase project. 
-            Please enable it in the Supabase dashboard under Authentication → Providers.
+            {error}
           </AlertDescription>
         </Alert>
       )}
@@ -165,49 +132,6 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
         </TabsList>
 
         <TabsContent value="login" className="space-y-6 animate-in fade-in-50">
-          <div className="space-y-4">
-            <Button 
-              variant="outline" 
-              className="w-full flex items-center justify-center gap-2"
-              onClick={() => handleSocialLogin('google')}
-              disabled={isLoading}
-            >
-              <Chrome className="h-5 w-5" />
-              <span>Continue with Google</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="w-full flex items-center justify-center gap-2"
-              onClick={() => handleSocialLogin('facebook')}
-              disabled={isLoading}
-            >
-              <Facebook className="h-5 w-5 text-blue-600" />
-              <span>Continue with Facebook</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="w-full flex items-center justify-center gap-2"
-              onClick={() => handleSocialLogin('twitter')}
-              disabled={isLoading}
-            >
-              <Twitter className="h-5 w-5 text-blue-400" />
-              <span>Continue with Twitter</span>
-            </Button>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t"></span>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                or continue with email
-              </span>
-            </div>
-          </div>
-
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -227,6 +151,13 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
                 <a 
                   href="#" 
                   className="text-xs text-muted-foreground hover:text-primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toast({
+                      title: "Password Reset",
+                      description: "This feature is coming soon. Please contact support if you forgot your password.",
+                    });
+                  }}
                 >
                   Forgot password?
                 </a>
@@ -240,13 +171,6 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
                 required
               />
             </div>
-
-            {error && !showProviderError && (
-              <div className="flex items-center gap-2 text-destructive text-sm">
-                <AlertCircle className="h-4 w-4" />
-                <span>{error}</span>
-              </div>
-            )}
 
             <Button 
               type="submit" 
@@ -311,13 +235,6 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
               </RadioGroup>
             </div>
 
-            {error && (
-              <div className="flex items-center gap-2 text-destructive text-sm">
-                <AlertCircle className="h-4 w-4" />
-                <span>{error}</span>
-              </div>
-            )}
-
             <Button 
               type="submit" 
               className="w-full" 
@@ -326,48 +243,11 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
               {isLoading ? 'Creating account...' : 'Create Account'}
             </Button>
           </form>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t"></span>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                or continue with
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <Button 
-              variant="outline" 
-              className="w-full flex items-center justify-center gap-2"
-              onClick={() => handleSocialLogin('google')}
-              disabled={isLoading}
-            >
-              <Chrome className="h-5 w-5" />
-              <span>Sign up with Google</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="w-full flex items-center justify-center gap-2"
-              onClick={() => handleSocialLogin('facebook')}
-              disabled={isLoading}
-            >
-              <Facebook className="h-5 w-5 text-blue-600" />
-              <span>Sign up with Facebook</span>
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="w-full flex items-center justify-center gap-2"
-              onClick={() => handleSocialLogin('twitter')}
-              disabled={isLoading}
-            >
-              <Twitter className="h-5 w-5 text-blue-400" />
-              <span>Sign up with Twitter</span>
-            </Button>
+          
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              By registering, you'll need to verify your email before logging in.
+            </p>
           </div>
         </TabsContent>
       </Tabs>
