@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Facebook, Twitter, Mail, AlertCircle, Chrome } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth, UserRole } from '@/context/AuthContext';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 interface AuthModalProps {
   defaultTab?: 'login' | 'register';
@@ -22,6 +24,7 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
   const [role, setRole] = useState<UserRole>('reader');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showProviderError, setShowProviderError] = useState(false);
   
   const { loginWithGoogle, loginWithFacebook, loginWithTwitter, loginWithEmail, registerWithEmail } = useAuth();
   const { toast } = useToast();
@@ -31,6 +34,7 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setShowProviderError(false);
 
     try {
       await loginWithEmail(email, password);
@@ -67,6 +71,7 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
     
     setIsLoading(true);
     setError('');
+    setShowProviderError(false);
 
     try {
       await registerWithEmail(email, password, name, role);
@@ -97,6 +102,7 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
   const handleSocialLogin = async (provider: 'google' | 'facebook' | 'twitter') => {
     setIsLoading(true);
     setError('');
+    setShowProviderError(false);
 
     try {
       switch (provider) {
@@ -112,7 +118,17 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
       }
     } catch (err: any) {
       console.error(`${provider} login error:`, err);
-      setError(`Failed to login with ${provider}`);
+      
+      // Check for the specific provider not enabled error
+      if (err.message?.includes('provider is not enabled') || 
+          err.error_code === 'validation_failed' ||
+          err.msg?.includes('provider is not enabled')) {
+        setShowProviderError(true);
+        setError(`${provider} login is not properly configured. Please contact support.`);
+      } else {
+        setError(`Failed to login with ${provider}`);
+      }
+      
       toast({
         variant: "destructive",
         title: "Login failed",
@@ -130,6 +146,17 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
           {activeTab === 'login' ? 'Sign in to continue' : 'Create your account'}
         </p>
       </div>
+
+      {showProviderError && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Authentication Provider Error</AlertTitle>
+          <AlertDescription>
+            The selected authentication provider is not enabled in your Supabase project. 
+            Please enable it in the Supabase dashboard under Authentication → Providers.
+          </AlertDescription>
+        </Alert>
+      )}
 
       <Tabs defaultValue={defaultTab} onValueChange={(v) => setActiveTab(v as 'login' | 'register')}>
         <TabsList className="grid grid-cols-2 w-full">
@@ -214,7 +241,7 @@ const AuthModal = ({ defaultTab = 'login', redirectPath = '/' }: AuthModalProps)
               />
             </div>
 
-            {error && (
+            {error && !showProviderError && (
               <div className="flex items-center gap-2 text-destructive text-sm">
                 <AlertCircle className="h-4 w-4" />
                 <span>{error}</span>

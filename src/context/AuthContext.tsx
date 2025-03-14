@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -109,6 +108,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const handleOAuthError = (error: any, provider: string) => {
+    console.error(`Error with ${provider} OAuth:`, error);
+    
+    if (error?.error_code === 'validation_failed' || 
+        error?.message?.includes('provider is not enabled')) {
+      throw {
+        error_code: 'validation_failed',
+        msg: `Unsupported provider: provider is not enabled`,
+        message: `The ${provider} authentication provider is not enabled in your Supabase project.`
+      };
+    }
+    
+    throw error;
+  };
+
   const loginWithGoogle = async (): Promise<void> => {
     setIsLoading(true);
     try {
@@ -119,10 +133,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        handleOAuthError(error, 'Google');
+      }
     } catch (error) {
-      console.error('Error logging in with Google:', error);
-      throw error;
+      handleOAuthError(error, 'Google');
     } finally {
       setIsLoading(false);
     }
@@ -138,10 +153,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        handleOAuthError(error, 'Facebook');
+      }
     } catch (error) {
-      console.error('Error logging in with Facebook:', error);
-      throw error;
+      handleOAuthError(error, 'Facebook');
     } finally {
       setIsLoading(false);
     }
@@ -157,10 +173,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        handleOAuthError(error, 'Twitter');
+      }
     } catch (error) {
-      console.error('Error logging in with Twitter:', error);
-      throw error;
+      handleOAuthError(error, 'Twitter');
     } finally {
       setIsLoading(false);
     }
